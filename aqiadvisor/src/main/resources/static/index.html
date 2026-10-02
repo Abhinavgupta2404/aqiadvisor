@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delhi Air Advisor</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 60px auto; text-align: center; padding: 0 20px; }
+        select, button { font-size: 16px; padding: 10px; margin-top: 10px; width: 100%; }
+        button { background: #2b7a2b; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        #result { margin-top: 30px; padding: 20px; border-radius: 10px; display: none; }
+        #aqiNumber { font-size: 48px; font-weight: bold; }
+        #category { font-size: 20px; margin-bottom: 10px; }
+        #advice { font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<h1>Should I Step Out?</h1>
+<p>Pick your area in Delhi to check the air quality.</p>
+
+<select id="area">
+    <option value="28.7159,77.1157">Rithala</option>
+    <option value="28.6341,77.2005">Mandir Marg</option>
+    <option value="28.6519,77.1909">Narela</option>
+    <option value="28.6315,77.2167">ITO</option>
+    <option value="28.5921,77.0460">Dwarka</option>
+    <option value="28.6469,77.3152">Anand Vihar</option>
+    <option value="28.5665,77.1764">RK Puram</option>
+    <option value="28.6692,77.1312">Punjabi Bagh</option>
+    <option value="28.6508,77.1534">Pusa</option>
+    <option value="28.5918,77.2219">Lodhi Road</option>
+    <option value="28.7495,77.0565">Rohini</option>
+    <option value="28.6139,77.2090">Connaught Place</option>
+    <option value="28.5245,77.1855">Saket</option>
+</select>
+
+<button onclick="checkAqi()">Check Air Quality</button>
+
+<div id="result">
+    <div id="aqiNumber"></div>
+    <div id="category"></div>
+    <div id="advice"></div>
+</div>
+
+<script>
+    async function checkAqi() {
+        const [lat, lon] = document.getElementById('area').value.split(',');
+        const response = await fetch(`/api/aqi?lat=${lat}&lon=${lon}`);
+        const data = await response.json();
+
+        document.getElementById('aqiNumber').innerText = data.aqi;
+        document.getElementById('category').innerText = data.category;
+        document.getElementById('advice').innerText = data.advice;
+
+        const resultBox = document.getElementById('result');
+        resultBox.style.display = 'block';
+
+        if (data.aqi <= 100) resultBox.style.background = '#d4edda';
+        else if (data.aqi <= 200) resultBox.style.background = '#fff3cd';
+        else resultBox.style.background = '#f8d7da';
+    }
+</script>
+
+</body>
+</html>
